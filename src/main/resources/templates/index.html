@@ -10,14 +10,18 @@
 <body>
 <div class="logo_box">
     <h3>Chat Room</h3>
-    <form id="login" action="login" method="get">
+    <form id="login" action="login" method="post">
         <div class="input_outer">
             <span class="u_user"></span>
             <input id="user" name="user" class="text" type="text" placeholder="Username">
             <span th:if="${error != null}"  th:text="${error}" style="color:red"/><br>
         </div>
+        <div class="input_outer">
+            <input id="pass" name="pass" class="text" type="password" placeholder="Password">
+            <span th:if="${error != null}"  th:text="${error}" style="color:red"/><br>
+        </div>
         <div class="mb2">
-            <a class="act-but submit" type="submit" onclick=login()>Login</a>
+            <button class="act-but submit" type="submit">Login</button>
         </div>
     </form>
 </div>

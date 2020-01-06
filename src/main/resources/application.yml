@@ -3,3 +3,9 @@ spring:
     cache: false
 server:
   address: 0.0.0.0
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
