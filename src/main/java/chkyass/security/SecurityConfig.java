@@ -11,10 +11,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import javax.sql.DataSource;
+
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    DataSource dataSource;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -23,6 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/sockjs/**").permitAll()
+                .antMatchers("/chat").hasAnyRole("ADMIN", "USER")
                 .and()
                     .formLogin()
                     .loginPage("/")
@@ -32,12 +38,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .passwordParameter("pass")
                     .failureUrl("/")
                     .permitAll()
-                .and()
+                /*.and()
                     .authorizeRequests()
                     .anyRequest()
                     .authenticated()
                 .and()
-                    .httpBasic()
+                    .httpBasic()*/
                 .and()
                     .logout()
                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
@@ -45,24 +51,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .invalidateHttpSession(true)
                     .deleteCookies("JSESSIONID");
 
+
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth)
             throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("admin")
-                .password(encoder().encode("password"))
-                .roles("USER")
-                .and()
-                .withUser("user")
-                .password(encoder().encode("user"))
-                .roles("USER");
+        auth.jdbcAuthentication()
+                .passwordEncoder(encoder())
+                .dataSource(dataSource);
 
     }
 
     @Bean
     public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(12);
     }
 }

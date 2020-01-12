@@ -1,6 +1,13 @@
 spring:
   thymeleaf:
     cache: false
+  datasource:
+    url: jdbc:mysql://localhost:3306/chat?createDatabaseIfNotExist=true
+    username: springuser
+    password: 8SYgSf&6<g]AVX=5
+  jpa:
+    show-sql: true
+
 server:
   address: 0.0.0.0
 
