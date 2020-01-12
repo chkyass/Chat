@@ -16,7 +16,7 @@
         }
 
         a {
-            color: #566473;
+            color: white;
             text-decoration: none;
         }
 
@@ -113,4 +113,19 @@
             background: #0096e6;
             width: 70%;
             margin-left: 15%;
+            border: none;
+        }
+
+        .register {
+            float: right;
+            font-weight: bold;
+            font-size: small;
+        }
+
+        a:link, a:visited, a:hover, a:active {
+            color: white;
+        }
+
+        .register:hover {
+            text-decoration: underline;
         }

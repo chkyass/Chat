@@ -14,33 +14,58 @@
         <div class="input_outer">
             <span class="u_user"></span>
             <input id="user" name="user" class="text" type="text" placeholder="Username">
-            <span th:if="${error != null}"  th:text="${error}" style="color:red"/><br>
         </div>
         <div class="input_outer">
             <input id="pass" name="pass" class="text" type="password" placeholder="Password">
-            <span th:if="${error != null}"  th:text="${error}" style="color:red"/><br>
         </div>
         <div class="mb2">
-            <button class="act-but submit" type="submit">Login</button>
+            <button id="register-btn" class="act-but submit" type="submit">Login</button>
         </div>
     </form>
+    <div class="register">
+        <a id="register-login-link" class="register" href="javascript:register();">Not registered ? Create an account</a>
+    </div>
 </div>
 <script>
 
     /**
+    *
+    * register link
+    */
+    function register() {
+        $(".mb2").before("<div id=\"confirm-pass\" class=\"input_outer\"><input name=\"pass\" class=\"text\"type=\"password\" placeholder=\"Confirm password\"></div>");
+        $("#register-btn").text("Register");
+        $("#register-login-link").text("Already registered ? Login");
+        $("#register-login-link").attr("href", "javascript:login()");
+        $("#login").attr("action", "register");
+    }
+
+    /**
+    *
+    * login link
+    */
+    function login() {
+        $("#confirm-pass").remove();
+        $("#register-btn").text("Login");
+        $("#register-login-link").text("Not Registered ? Create an account");
+        $("#register-login-link").attr("href", "javascript:register()");
+        $("#login").attr("action", "login");
+    }
+
+    /**
      * Login
-     */
+     *
     function login() {
         $("#login").submit();
     }
 
-    /**
+    **
      * Enter to login.
-     */
+     *
     document.onkeydown = function (event) {
         var e = event || window.event || arguments.callee.caller.arguments[0];
         e.keyCode === 13 && login();
-    };
+    };*/
 
 
 </script>
