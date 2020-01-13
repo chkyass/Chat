@@ -1,4 +1,4 @@
-package chkyass.model;
+package chkyass.entity;
 
 public class MessageForward extends Message {
     private int onlineCount;

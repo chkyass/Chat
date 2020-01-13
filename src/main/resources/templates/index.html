@@ -2,9 +2,9 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <title>Chat Room Login</title>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-            integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
             crossorigin="anonymous"></script>
+    <script type="text/javascript" src="js/main.js" ></script>
     <link rel="stylesheet" type="text/css" href="css/login.css">
 </head>
 <body>
@@ -13,7 +13,7 @@
     <form id="login" action="login" method="post">
         <div class="input_outer">
             <span class="u_user"></span>
-            <input id="user" name="user" class="text" type="text" placeholder="Username">
+            <input id="user" name="user" class="text" type="text" placeholder="Username" required>
         </div>
         <div class="input_outer">
             <input id="pass" name="pass" class="text" type="password" placeholder="Password">
@@ -23,51 +23,8 @@
         </div>
     </form>
     <div class="register">
-        <a id="register-login-link" class="register" href="javascript:register();">Not registered ? Create an account</a>
+        <a id="register-login-link" class="register" href="javascript:registerLink();">Not registered ? Create an account</a>
     </div>
 </div>
-<script>
-
-    /**
-    *
-    * register link
-    */
-    function register() {
-        $(".mb2").before("<div id=\"confirm-pass\" class=\"input_outer\"><input name=\"pass\" class=\"text\"type=\"password\" placeholder=\"Confirm password\"></div>");
-        $("#register-btn").text("Register");
-        $("#register-login-link").text("Already registered ? Login");
-        $("#register-login-link").attr("href", "javascript:login()");
-        $("#login").attr("action", "register");
-    }
-
-    /**
-    *
-    * login link
-    */
-    function login() {
-        $("#confirm-pass").remove();
-        $("#register-btn").text("Login");
-        $("#register-login-link").text("Not Registered ? Create an account");
-        $("#register-login-link").attr("href", "javascript:register()");
-        $("#login").attr("action", "login");
-    }
-
-    /**
-     * Login
-     *
-    function login() {
-        $("#login").submit();
-    }
-
-    **
-     * Enter to login.
-     *
-    document.onkeydown = function (event) {
-        var e = event || window.event || arguments.callee.caller.arguments[0];
-        e.keyCode === 13 && login();
-    };*/
-
-
-</script>
 </body>
 </html>

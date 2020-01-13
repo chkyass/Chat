@@ -29,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/sockjs/**").permitAll()
                 .antMatchers("/chat").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/register").permitAll()
                 .and()
                     .formLogin()
                     .loginPage("/")

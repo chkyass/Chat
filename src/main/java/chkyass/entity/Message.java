@@ -1,7 +1,7 @@
-package chkyass.model;
+package chkyass.entity;
 
 /**
- * WebSocket message model
+ * WebSocket message entity
  */
 public class Message {
     private String from;
