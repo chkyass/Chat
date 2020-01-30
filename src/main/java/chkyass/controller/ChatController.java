@@ -1,9 +1,10 @@
 package chkyass.controller;
 
 import chkyass.entity.Message;
-import chkyass.entity.MessageForward;
 import chkyass.service.UserServices;
 import com.alibaba.fastjson.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -11,18 +12,19 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
+import java.util.List;
 
 
 @Controller
 public class ChatController {
+
+    Logger logger = LoggerFactory.getLogger(ChatController.class);
+
 
     @Autowired
     UserServices service;
@@ -34,11 +36,12 @@ public class ChatController {
      * @return message to be forwarded
      */
     @MessageMapping("/message")
-    @SendTo("/room/messages")
-    public MessageForward forwardToAll(Message message) {
-        //return new MessageForward(message, service.getOnlineUsers());
-        return new MessageForward(message, 2);
+    @SendTo("/topic/messages")
+    public Message forwardToAll(Message message) {
+        service.persistMessage(message);
+        return message;
     }
+
 
     /**
      * login page
@@ -46,53 +49,65 @@ public class ChatController {
     @GetMapping(value = {"/"})
     public String root() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(authentication instanceof AnonymousAuthenticationToken);
         if(authentication instanceof AnonymousAuthenticationToken)
             return "index";
         return "chat";
     }
 
-
     /**
-     * chat page
+     * Remove all messages sent by a user
      */
-    @GetMapping("/chat")
-    public String chat(Model model) {
-        return "chat";
+    @PostMapping("/clear")
+    @ResponseBody
+    public String clear(@RequestParam String username) {
+        service.clearUserMessages(username);
+        return "success";
     }
-
 
     /**
      * register
      */
     @PostMapping("/register")
     @ResponseBody
-    public String register(HttpServletRequest request,
-                           @RequestParam(name = "user") String username,
-                           @RequestParam(name = "pass") String pass) {
+    public String register(HttpServletRequest request, @RequestParam(name = "user") String username, @RequestParam(name = "pass") String pass) {
 
         JSONObject jsonObject = new JSONObject();
-        if (pass.isEmpty()){
-            jsonObject.put("status", "error");
-            jsonObject.put("message", "Empty password not allowed ");
-            return jsonObject.toJSONString();
-        }
-
         try {
-            if (!service.register(request, username, pass)) {
-                jsonObject.put("status", "error");
+            if (pass.isEmpty())
+                jsonObject.put("message", "Empty password not allowed ");
+            else if (!service.register(request, username, pass))
                 jsonObject.put("message", "Username already exist");
-                return jsonObject.toJSONString();
+            else {
+                jsonObject.put("redirect", "/");
             }
         } catch (ServletException e) {
-            jsonObject.put("status", "error");
-            jsonObject.put("message", "internal error");
+            jsonObject.put("message", e.getMessage());
+        }
+        finally {
             return jsonObject.toJSONString();
         }
+    }
 
-        jsonObject.put("status", "success");
-        jsonObject.put("redirect", "/chat");
-        return jsonObject.toJSONString();
+    @GetMapping("/history")
+    @ResponseBody
+    public List<Message> history() {
+        return service.history();
+    }
+
+    @GetMapping("/online")
+    @ResponseBody
+    public long online() {
+        long n = service.numberOfAuthenticatedUsers();
+        logger.info("Number of users online: " + n);
+        return n;
+    }
+
+    @GetMapping("/username")
+    @ResponseBody
+    public String username(Principal principal) {
+        String username = principal.getName();
+        logger.info("Request username: " + username);
+        return username;
     }
 
 }

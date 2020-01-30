@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html style="height: 100%;">
 <head>
     <title>Chat Room</title>
     <meta charset="utf-8" name="viewport" content="width=device-width">
@@ -11,36 +11,36 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mdui/0.4.3/js/mdui.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script type="text/javascript" src="js/chat.js" ></script>
 
 </head>
-<body class="mdui-theme-primary-indigo mdui-theme-accent-pink">
+<body class="mdui-theme-primary-indigo mdui-theme-accent-pink" style="height: 100%;">
 
 <div style="margin-left:20px;margin-right:20px">
     <div class="mdui-toolbar mdui-color-theme">
         <span class="mdui-typo-title">Chat Room</span>
         <div class="mdui-toolbar-spacer"></div>
-        <a class="mdui-btn mdui-btn-icon" th:href="@{logout}" onclick="close()">
+        <a class="mdui-btn mdui-btn-icon" href="/logout" onclick="close()">
             <i class="mdui-icon material-icons">exit_to_app</i>
         </a>
     </div>
 </div>
 
-<div style="margin-left:20px;margin-right:20px">
-    <div class="container_text">
-        <div class="mdui-row">
+<div style="margin-left:20px;margin-right:20px; height: 100%;">
+    <div class="container_text" style="height: 100%;">
+        <div class="mdui-row" style="height: 100%;">
             <div class="mdui-col-xs-12 mdui-col-sm-6">
                 <div class="mdui-col-xs-12 mdui-col-sm-10">
                     <div class="mdui-textfield-floating-label" style="margin-top:15px">
                         <i class="mdui-icon">Welcome：</i>
-                        <i class="mdui-icon" id="username" th:text="${username}">
-                        </i>
+                        <i class="mdui-icon" id="username"></i>
                     </div>
                 </div>
                 <div class="mdui-col-xs-12 mdui-col-sm-10">
                     <div class="mdui-textfield mdui-textfield-floating-label">
                         <i class="mdui-icon material-icons">textsms</i>
                         <label class="mdui-textfield-label">Send Text</label>
-                        <input class="mdui-textfield-input" id="msg"/>
+                        <textarea class="mdui-textfield-input" id="msg"></textarea>
                     </div>
                     <div class="mdui-container" style="padding:20px 35px">
                         <button id= "send" class="mdui-btn mdui-color-theme mdui ripple"
@@ -53,7 +53,7 @@
                 </div>
             </div>
 
-            <div class="mdui-col-xs-6 mdui-col-sm-5" style="padding:10px 0">
+            <div class="mdui-col-xs-6 mdui-col-sm-5" style="padding:10px 0; height:100%">
                 <div class="mdui-chip">
                     <span class="mdui-chip-icon mdui-color-blue">
                         <i class="mdui-icon material-icons">&#xe420;</i></span>
@@ -65,81 +65,13 @@
                         <i class="mdui-icon material-icons">face</i></span>
                     <span class="mdui-chip-title">Online Users : <span class="chat-num"></span></span>
                 </div>
-                <div class="message-container">
+                <div class="message-container" style="overflow: auto; height: 80%;">
                 </div>
             </div>
 
         </div>
     </div>
 </div>
-
-<script th:inline="javascript">
-    var socket;
-    var stompClient;
-
-    function connect() {
-        socket = new SockJS('/sockjs');
-        stompClient = new Stomp.over(socket);
-        stompClient.connect({}, function() {
-            console.log('connected: ' + $('#username').text());
-            stompClient.subscribe('/room/messages', function(event) {
-                receive(event.body);
-            });
-        });
-
-    }
-
-    connect();
-
-    function sendMessage() {
-        stompClient.send("/send/message", {},
-            JSON.stringify(
-            {
-                'from' : $('#username').text(),
-                'message' : $('#msg').val()
-            })
-        );
-        $('#msg').val("");
-    }
-
-    function receive(event) {
-        console.log('WebSocket Receives：%c' + event, 'color:green');
-        var message = JSON.parse(event);
-        $('.message-container').append(
-            '<div class="mdui-card" style="margin: 10px 0;">' +
-            '<div class="mdui-card-primary">' +
-            '<div class="mdui-card-content message-content">' + message.from + "：" + message.message + '</div>' +
-            '</div></div>');
-        
-         $('.chat-num').text(message.onlineCount);
-
-        $(document).ready(function(){
-            var $cards = $(".message-container").children('.mdui-card').toArray();
-                if ($cards.length > 5) {
-                    $cards.forEach(function (item, index) {
-                        $(item).is(":visible") && index < $cards.length - 5 && $(item).slideUp();
-                    });
-                }
-         });
-    }
-
-    function close() {
-        console.log("Disconnected");
-        stompClient.disconnect();
-    }
-
-    function clearMsg() {
-        $(".message-container").empty();
-    }
-
-    $(document).ready(function(){
-        $('#msg').keypress(function(e){
-          if(e.keyCode==13)
-            sendMessage();
-        });
-    });
-</script>
-
 </body>
 </html>
 

@@ -8,6 +8,8 @@ function registerLink() {
     $("#register-login-link").text("Already registered ? Login");
     $("#register-login-link").attr("href", "javascript:loginLink()");
     $("#login").attr("action", "javascript:register()");
+    $("#user").val("");
+    $("#pass").val("");
 }
 
 /**
@@ -20,6 +22,8 @@ function loginLink() {
     $("#register-login-link").text("Not registered ? Create an account");
     $("#register-login-link").attr("href", "javascript:registerLink()");
     $("#login").attr("action", "login");
+    $("#user").val("");
+    $("#pass").val("");
 }
 
 /**
@@ -37,8 +41,8 @@ function register() {
           $.post( "/register", { user: $("#user").val(), pass: $("#pass").val()},
             function (data) {
                 var message = JSON.parse(data);
-                if(message.status === "success") {
-                    window.location.replace("/chat");
+                if(message.redirect) {
+                    window.location.replace(message.redirect);
                 } else {
                     $("#user").after(" <span id=\"user-exist\" style=\"color:red\">" + message.message + "</span>");
                 }
@@ -51,5 +55,5 @@ function register() {
  */
 document.onkeydown = function (event) {
     var e = event || window.event || arguments.callee.caller.arguments[0];
-    e.keyCode === 13 && login();
+    e.keyCode === 13;
 };

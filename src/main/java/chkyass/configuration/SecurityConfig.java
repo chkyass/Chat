@@ -1,5 +1,7 @@
-package chkyass.security;
+package chkyass.configuration;
 
+import chkyass.listener.LoginListener;
+import chkyass.listener.LogoutListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,6 +9,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -26,9 +30,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/").permitAll()
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/sockjs/**").permitAll()
-                .antMatchers("/chat").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/configuration").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/register").permitAll()
                 .and()
                     .formLogin()
@@ -38,21 +43,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .usernameParameter("user")
                     .passwordParameter("pass")
                     .failureUrl("/")
-                    .permitAll()
-                /*.and()
-                    .authorizeRequests()
-                    .anyRequest()
-                    .authenticated()
-                .and()
-                    .httpBasic()*/
                 .and()
                     .logout()
                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                     .logoutSuccessUrl("/")
                     .invalidateHttpSession(true)
                     .deleteCookies("JSESSIONID");
-
-
+        http
+                .sessionManagement()
+                .maximumSessions(1);
     }
 
     @Autowired
@@ -68,4 +67,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder(12);
     }
+
+    @Bean
+    SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
+
 }

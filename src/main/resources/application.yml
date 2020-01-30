@@ -7,14 +7,24 @@ spring:
     password: 8SYgSf&6<g]AVX=5
   jpa:
     show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL5Dialect
 
 server:
   address: 0.0.0.0
+  servlet:
+    session:
+      persistent: false
 
 logging:
-  level:
-    org:
+  #level:
+  #  org:
       #springframework:
       #  security: DEBUG
-      hibernate.SQL: DEBUG
-      hibernate.type: TRACE
+      #hibernate.SQL: DEBUG
+      #hibernate.type: DEBUG
+  file: application.log
