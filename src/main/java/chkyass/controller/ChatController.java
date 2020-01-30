@@ -56,13 +56,13 @@ public class ChatController {
 
     /**
      * Remove all messages sent by a user
-     */
+     *
     @PostMapping("/clear")
     @ResponseBody
     public String clear(@RequestParam String username) {
         service.clearUserMessages(username);
         return "success";
-    }
+    }*/
 
     /**
      * register
@@ -90,8 +90,8 @@ public class ChatController {
 
     @GetMapping("/history")
     @ResponseBody
-    public List<Message> history() {
-        return service.history();
+    public List<Message> history(Principal principal) {
+        return service.room_history(principal.getName());
     }
 
     @GetMapping("/online")

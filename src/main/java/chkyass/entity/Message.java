@@ -4,12 +4,12 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
  * WebSocket message entity
  */
-
 @Entity
 @Table(name = "MESSAGES")
 public class Message {
@@ -22,8 +22,21 @@ public class Message {
 
     private String message;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id")
+    @NotNull
+    private Room room;
+
     @CreationTimestamp
     private LocalDateTime timestamp;
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
 
     // mandatory for jackson Json conversion
     public Message() {
@@ -39,20 +52,20 @@ public class Message {
         this.message = message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
     public long getId() {
         return id;
     }
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     public LocalDateTime getTimestamp() {

@@ -12,7 +12,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.MySQL5Dialect
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+hibernate:
+  dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 
 server:
   address: 0.0.0.0
@@ -21,10 +23,10 @@ server:
       persistent: false
 
 logging:
-  #level:
-  #  org:
+  level:
+    org:
       #springframework:
       #  security: DEBUG
-      #hibernate.SQL: DEBUG
-      #hibernate.type: DEBUG
+      hibernate.SQL: DEBUG
+      hibernate.type: DEBUG
   file: application.log
