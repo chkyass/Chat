@@ -82,20 +82,25 @@ public class ChatController {
             else if (!service.register(request, username, pass))
                 jsonObject.put("message", "Username already exist");
             else {
-                jsonObject.put("redirect", "/");
+                jsonObject.put("redirect", env.getProperty("server.servlet.context-path"));
+                logger.info("Before to send email from Thread: " + Thread.currentThread().getName());
+                service.sendEmail("ychouaki.chatroom@gmail.com", "Registration:" + username);
             }
         } catch (ServletException e) {
             jsonObject.put("message", e.getMessage());
         }
         finally {
+            logger.info("Registration respond to client with: " + jsonObject.toJSONString());
             return jsonObject.toJSONString();
         }
     }
 
     @GetMapping("/history")
     @ResponseBody
-    public List<Message> history(Principal principal) {
-        return service.room_history(principal.getName());
+    public List<Message> roomHistory(Principal principal) {
+        logger.info("Get history For: " + principal.getName());
+        List<Message> messages = service.roomHistory(principal.getName());
+        return messages;
     }
 
     @GetMapping("/online")
