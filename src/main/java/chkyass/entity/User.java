@@ -9,21 +9,25 @@ import java.util.*;
 public class User {
     @Id
     @NotBlank
-    @Column(length = 50)
+    @Column(length = 20)
     private String username;
 
+    @Column
     private String password;
 
+    @Column
     private boolean enabled;
 
     @ElementCollection
     @CollectionTable(name ="AUTHORITIES",joinColumns = @JoinColumn(name = "USERNAME"))
     private Set<Authority> roles = new HashSet<>();
 
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(name = "users_rooms", joinColumns = @JoinColumn(name = "user_id")
-                                    ,inverseJoinColumns = @JoinColumn(name = "room_id"))
-    private List<Room> rooms = new ArrayList<>();
+    /*@ManyToMany(cascade = {CascadeType.ALL})
+    /@JoinTable(name = "users_rooms", joinColumns = @JoinColumn(name = "user_id")
+    /
+    /                                ,inverseJoinColumns = @JoinColumn(name = "room_id"))
+    @Transient
+    private List<Room> rooms = new ArrayList<>();*/
 
     public User(String username, String password, boolean enabled) {
         this.username = username;
@@ -62,13 +66,13 @@ public class User {
         return enabled;
     }
 
-    public List<Room> getRooms() {
+    /*public List<Room> getRooms() {
         return rooms;
     }
 
     public void setRooms(List<Room> rooms) {
         this.rooms = rooms;
-    }
+    }*/
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
@@ -82,9 +86,9 @@ public class User {
         this.roles = roles;
     }
 
-    public void addRoom(Room r) {
+    /*public void addRoom(Room r) {
         rooms.add(r);
-    }
+    }*/
 
     public User(@NotBlank String username, String password, boolean enabled, Set<Authority> roles) {
         this.username = username;
