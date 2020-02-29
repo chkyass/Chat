@@ -2,7 +2,7 @@
 <html style="height: 100%;">
 <head>
     <title>Chat Room</title>
-    <meta charset="utf-8" name="viewport" content="width=device-width">
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdui/0.4.3/css/mdui.min.css">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
@@ -12,63 +12,61 @@
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script type="text/javascript" src="js/chat.js" ></script>
+    <link rel="stylesheet" type="text/css" href="css/chat.css">
 
 </head>
 <body class="mdui-theme-primary-indigo mdui-theme-accent-pink" style="height: 100%;">
-
+<!-- Header -->
 <div style="margin-left:20px;margin-right:20px">
     <div class="mdui-toolbar mdui-color-theme">
         <span class="mdui-typo-title">Chat Room</span>
         <div class="mdui-toolbar-spacer"></div>
-        <a class="mdui-btn mdui-btn-icon" href="/logout" onclick="close()">
+        <a class="mdui-btn mdui-btn-icon" href="/chat/logout" onclick="close()">
             <i class="mdui-icon material-icons">exit_to_app</i>
         </a>
     </div>
 </div>
 
-<div style="margin-left:20px;margin-right:20px; height: 100%;">
+<div style="margin-left:20px;margin-right:20px; height: 95%;">
     <div class="container_text" style="height: 100%;">
-        <div class="mdui-row" style="height: 100%;">
-            <div class="mdui-col-xs-12 mdui-col-sm-6">
-                <div class="mdui-col-xs-12 mdui-col-sm-10">
+        <div class="mdui-row">
+            <div class="mdui-col-xs-12 mdui-col-sm-6" id="input-pane">
+                <div class="mdui-col-xs-12 mdui-col-sm-10" id="welcome-pane">
                     <div class="mdui-textfield-floating-label" style="margin-top:15px">
                         <i class="mdui-icon">Welcome：</i>
                         <i class="mdui-icon" id="username"></i>
                     </div>
                 </div>
-                <div class="mdui-col-xs-12 mdui-col-sm-10">
+                <div class="mdui-col-xs-12 mdui-col-sm-10" >
                     <div class="mdui-textfield mdui-textfield-floating-label">
                         <i class="mdui-icon material-icons">textsms</i>
                         <label class="mdui-textfield-label">Send Text</label>
                         <textarea class="mdui-textfield-input" id="msg"></textarea>
                     </div>
-                    <div class="mdui-container" style="padding:20px 35px">
+                    <div class="mdui-container" id="send-pane" style="padding:20px 35px">
                         <button id= "send" class="mdui-btn mdui-color-theme mdui ripple"
                                 onclick="sendMessage()">Send
                         </button>
-                        <button class="mdui-btn mdui-color-theme mdui-ripple"
-                                onclick="clearMsg()">Clear
-                        </button>
+                    </div>
+                    <div class="mdui-chip" style="margin-top: 40%;">
+                    <span class="mdui-chip-icon mdui-color-blue">
+                        <i class="mdui-icon material-icons">face</i></span>
+                        <span class="mdui-chip-title">Users</span>
+                    </div>
+                    <div id="user-list"style=" height: 45%; overflow: scroll;">
+
                     </div>
                 </div>
             </div>
-
-            <div class="mdui-col-xs-6 mdui-col-sm-5" style="padding:10px 0; height:100%">
+            <div class="mdui-col-xs-6 mdui-col-sm-5" id="messages-pane" style="padding:10px 0">
                 <div class="mdui-chip">
                     <span class="mdui-chip-icon mdui-color-blue">
                         <i class="mdui-icon material-icons">&#xe420;</i></span>
                     <span class="mdui-chip-title">Content</span>
                 </div>
-
-                <div class="mdui-chip">
-                    <span class="mdui-chip-icon mdui-color-blue">
-                        <i class="mdui-icon material-icons">face</i></span>
-                    <span class="mdui-chip-title">Online Users : <span class="chat-num"></span></span>
-                </div>
-                <div class="message-container" style="overflow: auto; height: 80%;">
+                <div class="message-container" style="overflow: auto; height: 100%;">
                 </div>
             </div>
-
         </div>
     </div>
 </div>

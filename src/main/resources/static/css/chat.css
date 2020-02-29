@@ -1,0 +1,57 @@
+@media screen and (max-width: 600px) {
+    .mdui-chip {
+        display: none;
+    }
+
+    #user-list {
+        display: none;
+    }
+
+    #input-pane {
+        width: 100%;
+        height: 25%;
+    }
+
+    #messages-pane {
+        width: 100%;
+        height: 75%;
+    }
+
+    .mdui-row {
+       height: 100%;
+    }
+
+    #welcome-pane {
+        display:none;
+    }
+}
+
+@media screen and (min-width: 600px) {
+    .mdui-row {
+        height: 90%;
+    }
+
+    #input-pane {
+        height: 100%;
+    }
+
+    #messages-pane {
+        height: 100%;
+        width: 41.666667%;
+    }
+
+    .message-container {
+        margin-top: 5%;
+    }
+}
+
+
+@media screen and (max-height: 600px) {
+    #send-pane {
+        display: none;
+    }
+
+    #welcome-pane {
+        display:none;
+    }
+}
