@@ -56,22 +56,17 @@ public class ChatController {
      * login page
      */
     @GetMapping(value = {"/"})
-    public String root() {
+    public String root(HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication instanceof AnonymousAuthenticationToken)
             return "index";
+
+        if(request.isUserInRole("ADMIN"))
+            return "admin";
+
         return "chat";
     }
 
-    /**
-     * Remove all messages sent by a user
-     *
-    @PostMapping("/clear")
-    @ResponseBody
-    public String clear(@RequestParam String username) {
-        service.clearUserMessages(username);
-        return "success";
-    }*/
 
     /**
      * register
@@ -79,7 +74,7 @@ public class ChatController {
     @PostMapping("/register")
     @ResponseBody
     public String register(HttpServletRequest request, @RequestParam(name = "user") String username, @RequestParam(name = "pass") String pass) {
-
+        logger.info("User register");
         JSONObject jsonObject = new JSONObject();
         try {
             if (pass.isEmpty())
