@@ -5,6 +5,7 @@
 
 body {
     background: #383a3c url("img/login-bg.jpg");
+    background
     font-weight: 400;
     font-size: 1em;
     line-height: 1.25;
@@ -27,6 +28,10 @@ a:hover, a:focus {
 section {
     padding: 1em;
     text-align: center;
+}
+
+input:required {
+    box-shadow:none;
 }
 
 .logo_box {
@@ -90,7 +95,6 @@ section {
 
 .mb2 {
     margin-bottom: 20px;
-    cursor: pointer;
 }
 
 .mb2 a {
@@ -114,6 +118,7 @@ section {
     width: 70%;
     margin-left: 15%;
     border: none;
+    cursor: pointer;
 }
 
 .register {
