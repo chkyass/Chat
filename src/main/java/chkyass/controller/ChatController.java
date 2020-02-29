@@ -6,29 +6,37 @@ import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
 public class ChatController {
-
     Logger logger = LoggerFactory.getLogger(ChatController.class);
-
 
     @Autowired
     UserServices service;
 
+    @Autowired
+    SimpMessagingTemplate template;
+
+    @Autowired
+    Environment env;
 
     /**
      * Used to forward a message to everyone
@@ -36,9 +44,10 @@ public class ChatController {
      * @return message to be forwarded
      */
     @MessageMapping("/message")
-    @SendTo("/topic/messages")
+    @Transactional
     public Message forwardToAll(Message message) {
         service.persistMessage(message);
+        template.convertAndSend("/topic/"+message.getRoomId(), message);
         return message;
     }
 
