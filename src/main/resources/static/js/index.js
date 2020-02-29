@@ -3,7 +3,7 @@
 * register link
 */
 function registerLink() {
-    $(".mb2").before("<div class=\"input_outer\" id=\"confirm-container\"><input id=\"confirm-pass\" name=\"pass\" class=\"text\"type=\"password\" placeholder=\"Confirm password\"></div>");
+    $(".mb2").before("<div class=\"input_outer\" id=\"confirm-container\"><input id=\"confirm-pass\" name=\"pass\" class=\"text\"type=\"password\" placeholder=\"Confirm password\" onfocus=\"cleanErrors()\"></div>");
     $("#register-btn").text("Register");
     $("#register-login-link").text("Already registered ? Login");
     $("#register-login-link").attr("href", "javascript:loginLink()");
@@ -38,7 +38,7 @@ function register() {
         $("#confirm-pass").val("")
         $("#pass").val("")
     } else {      
-          $.post( "/register", { user: $("#user").val(), pass: $("#pass").val()},
+          $.post( "/chat/register", { user: $("#user").val(), pass: $("#pass").val()},
             function (data) {
                 var message = JSON.parse(data);
                 if(message.redirect) {
@@ -48,6 +48,11 @@ function register() {
                 }
             });
     }
+}
+
+function cleanErrors(){
+    $('#password-mismatch').remove();
+    $('#user-exist').remove();
 }
 
 /**
