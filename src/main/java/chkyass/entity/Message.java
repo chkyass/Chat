@@ -1,10 +1,10 @@
 package chkyass.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
@@ -15,41 +15,57 @@ import java.time.LocalDateTime;
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
     private long id;
 
     @NotBlank
-    private String user;
+    @Column(name = "username")
+    private String username;
 
+    @Column(length = 2000)
     private String message;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_id")
-    @NotNull
-    private Room room;
+    @Column(name = "room_id")
+    @JsonIgnore
+    private long roomId;
 
+    @JsonIgnore
     @CreationTimestamp
     private LocalDateTime timestamp;
-
-    public Room getRoom() {
-        return room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
-    }
 
     // mandatory for jackson Json conversion
     public Message() {
     }
 
     public Message(Message copy) {
-        this.user = copy.user;
+        this.username = copy.username;
         this.message = copy.message;
     }
 
-    public Message(String user, String message) {
-        this.user = user;
+    public Message(String username, String message) {
+        this.username = username;
         this.message = message;
+    }
+
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String user) {
+        this.username = user;
     }
 
     public long getId() {
@@ -60,27 +76,15 @@ public class Message {
         this.id = id;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public long getRoomId() {
+        return roomId;
     }
 
-    public String getMessage() {
-        return message;
+    public void setRoomId(long roomId) {
+        this.roomId = roomId;
     }
 
     public LocalDateTime getTimestamp() {
         return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
     }
 }
