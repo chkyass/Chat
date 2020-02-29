@@ -13,20 +13,29 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        #generate_statistics: true
 hibernate:
   dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  hibernate:
+    jdbc:
+      batch_size: 50
 
 server:
-  address: 0.0.0.0
+  address: 127.0.0.1
+  port: 8443
   servlet:
     session:
       persistent: false
+    context-path: /chat
 
-logging:
-  level:
-    org:
+#logging:
+  #level:
+    #org:
       #springframework:
       #  security: DEBUG
-      hibernate.SQL: DEBUG
-      hibernate.type: DEBUG
-  file: application.log
+      #hibernate.SQL: DEBUG
+      #hibernate.type: DEBUG
+  #file: application.log
+  #path: /etc/chatroom/logs
+gmail:
+  account: ychouaki.chatroom@gmail.com
