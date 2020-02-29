@@ -119,4 +119,41 @@ public class ChatController {
         return username;
     }
 
+
+    @GetMapping("/rooms")
+    @ResponseBody
+    public Map<Long, List<String>> rooms() {
+        return service.getRooms();
+    }
+
+    @PostMapping("/selectroom")
+    @ResponseBody
+    public List<Message> selectRoom(Principal principal, long room_id) {
+        logger.info("select room: "+ room_id);
+        return service.setRoom(principal.getName(), room_id);
+    }
+
+    @GetMapping("/roomid")
+    @ResponseBody
+    public Long roomid(Principal principal) {
+        logger.info("Get roomId for: " + principal.getName());
+        return service.getUserRoom(principal.getName());
+    }
+
+    @GetMapping("/usersinroom")
+    @ResponseBody
+    public List<String> usersInRoom(Principal principal) {
+        logger.info("Request users in room");
+        List users = service.usersRoom(principal.getName());
+        users.add("yacine");
+        logger.info("Found in user room: " +users);
+        return users;
+    }
+
+    @PostMapping("/moveroom")
+    public ResponseEntity moveroom(@RequestParam String username, @RequestParam long roomId) {
+        logger.info("Moving "+ username + "to room" + roomId);
+        service.changeUserRoom(username, roomId);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 }
