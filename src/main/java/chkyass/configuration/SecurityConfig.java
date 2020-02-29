@@ -1,7 +1,5 @@
 package chkyass.configuration;
 
-import chkyass.listener.LoginListener;
-import chkyass.listener.LogoutListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,8 +7,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -30,11 +26,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/css/**").permitAll()
-                .antMatchers("/sockjs/**").permitAll()
-                .antMatchers("/configuration").hasAnyRole("ADMIN", "USER")
-                .antMatchers("/register").permitAll()
+                .antMatchers("/", "/css/**", "/sockjs/**", "/register").permitAll()
+                .antMatchers("/admin", "/rooms", "/selectroom", "/moveroom").hasAuthority("ROLE_ADMIN")
                 .and()
                     .formLogin()
                     .loginPage("/")
@@ -52,6 +45,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .sessionManagement()
                 .maximumSessions(1);
+
+        http.headers().frameOptions().disable();
     }
 
     @Autowired
@@ -65,12 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder(12);
-    }
-
-    @Bean
-    SessionRegistry sessionRegistry() {
-        return new SessionRegistryImpl();
+        return new BCryptPasswordEncoder();
     }
 
 }
